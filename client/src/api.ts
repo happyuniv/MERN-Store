@@ -1,7 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = "http://localhost:5000/api";
-const TOKEN = localStorage.getItem("token");
+const BASE_URL = 'https://mern-server-58qj.onrender.com/api';
+
+const TOKEN = localStorage.getItem('token');
 
 export const publicRequest = axios.create({ baseURL: BASE_URL });
 
