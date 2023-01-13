@@ -1,11 +1,11 @@
-import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { userRequest } from "../api";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { userUpdate } from "../redux/userSlice";
-import Backdrop from "./Backdrop";
-import Loading from "./Loading";
+import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { userRequest } from '../api';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { userUpdate } from '../redux/userSlice';
+import Backdrop from './Backdrop';
+import Loading from './Loading';
 
 type props = {
   toggleEdit: () => void;
@@ -98,7 +98,7 @@ const Information = styled.div<{ success: boolean }>`
   color: gray;
   font-size: 1.5rem;
   font-weight: 500;
-  background-color: ${(props) => (props.success ? "#9ee79a80" : "#fea4a480")};
+  background-color: ${(props) => (props.success ? '#9ee79a80' : '#fea4a480')};
   z-index: 1001;
   opacity: 1;
   animation: fadein 1s;
@@ -126,12 +126,12 @@ const InformationComp = ({ children, triggerUpdate, success }: props2) => {
 };
 
 const ProfileEdit = ({ toggleEdit }: props) => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [informMessage, setInformMessage] = useState({
-    message: "",
+    message: '',
     success: false,
   });
   const [triggerUpdate, setTriggerUpdate] = useState(false);
@@ -148,7 +148,7 @@ const ProfileEdit = ({ toggleEdit }: props) => {
     setTriggerUpdate(!triggerUpdate);
     if (!(username.trim() || email || password)) {
       setInformMessage({
-        message: "Fill in at least one field",
+        message: 'Fill in at least one field',
         success: false,
       });
       return;
@@ -169,12 +169,12 @@ const ProfileEdit = ({ toggleEdit }: props) => {
         password,
       });
       dispatch(userUpdate(res.data));
-      setInformMessage({ message: "User Successfully Updated", success: true });
+      setInformMessage({ message: 'User Successfully Updated', success: true });
       setLoading(false);
     } catch (e) {
       if (e instanceof AxiosError)
-        setInformMessage({ message: e.response?.data, success: false });
-      else setInformMessage({ message: "Server Error", success: false });
+        setInformMessage({ message: e.message, success: false });
+      else setInformMessage({ message: 'Server Error', success: false });
       setLoading(false);
     }
   };
@@ -195,30 +195,30 @@ const ProfileEdit = ({ toggleEdit }: props) => {
         <Form onSubmit={updateProfile}>
           <Holder>Name</Holder>
           <Input
-            placeholder="name"
+            placeholder='name'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <Holder>Email</Holder>
           <Input
-            placeholder="e-mail"
-            type="email"
+            placeholder='e-mail'
+            type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <Holder>Password</Holder>
           <Input
-            placeholder="password"
-            type="password"
+            placeholder='password'
+            type='password'
             onChange={(e) => setPassword(e.target.value)}
           />
           <Holder>Confirm Password</Holder>
           <Input
-            placeholder="confirm password"
-            type="password"
+            placeholder='confirm password'
+            type='password'
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <Submit type="submit">UPDATE</Submit>
+          <Submit type='submit'>UPDATE</Submit>
           <Close onClick={toggleEdit}>CLOSE</Close>
         </Form>
       </Container>
