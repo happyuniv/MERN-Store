@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const BASE_URL = 'https://mern-server-58qj.onrender.com/api';
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://mern-server-58qj.onrender.com/api';
+// const BASE_URL = 'http://localhost:5000/api';
 
 const TOKEN = localStorage.getItem('token');
 
