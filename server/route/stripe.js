@@ -1,27 +1,24 @@
-import express from "express";
-import Stripe from "stripe";
-import dotenv from "dotenv";
-import Order from "../model/Order.js";
-import { veryfyTokenAndAuthorization } from "./verifyToken.js";
+import express from 'express';
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+import Order from '../model/Order.js';
+import { veryfyTokenAndAuthorization } from './verifyToken.js';
 
 dotenv.config();
 
 const router = express.Router();
-// const stripe = Stripe(process.env.STRIPE_SEC);
-const stripe = Stripe(
-  "sk_test_51LtR8KH8mBW2RcMBRq7sRciRns2CK6w9gFWAF4z9zemL5unE15ir5sv4BgUWLsS6uA46sr23JSwAAOt7Ksp16m06005hA1dSbT"
-);
+const stripe = Stripe(process.env.STRIPE_SEC);
 
-router.post("/webhook", async (req, res) => {
+router.post('/webhook', async (req, res) => {
   const event = req.body;
 
-  console.log("Got payload: " + event.type);
+  console.log('Got payload: ' + event.type);
 
-  if (event.type === "checkout.session.completed") {
+  if (event.type === 'checkout.session.completed') {
     const session = await stripe.checkout.sessions.retrieve(
       event.data.object.id,
       {
-        expand: ["line_items.data.price.product"],
+        expand: ['line_items.data.price.product'],
       }
     );
 
@@ -59,12 +56,12 @@ router.post("/webhook", async (req, res) => {
   }
 });
 
-router.post("/payment/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.post('/payment/:id', veryfyTokenAndAuthorization, async (req, res) => {
   const { user, selectedAddress, cartItems } = req.body;
   const items = cartItems.map((item) => ({
     quantity: item.amount,
     price_data: {
-      currency: "usd",
+      currency: 'usd',
       unit_amount: item.price * 100,
       product_data: {
         name: item.title,
@@ -75,7 +72,7 @@ router.post("/payment/:id", veryfyTokenAndAuthorization, async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       line_items: items,
-      mode: "payment",
+      mode: 'payment',
       metadata: {
         userId: user._id,
         useremail: user.email,
@@ -86,8 +83,8 @@ router.post("/payment/:id", veryfyTokenAndAuthorization, async (req, res) => {
       },
       // success_url: `${YOUR_DOMAIN}?success=true`,
       // cancel_url: `${YOUR_DOMAIN}?canceled=true`,
-      success_url: "http://localhost:3000/order/{CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3000",
+      success_url: `${process.env.MY_DOMAIN}/order/{CHECKOUT_SESSION_ID}`,
+      cancel_url: process.env.MY_DOMAIN,
     });
     res.status(200).json({ session_url: session.url });
   } catch (err) {

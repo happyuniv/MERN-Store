@@ -1,33 +1,34 @@
-import express from "express";
-import CryptoJS from "crypto-js";
-import User from "../model/User.js";
+import express from 'express';
+import CryptoJS from 'crypto-js';
+import User from '../model/User.js';
 import {
   veryfyTokenAndAdmin,
   veryfyTokenAndAuthorization,
-} from "./verifyToken.js";
+} from './verifyToken.js';
 
 const router = express.Router();
 
 // Add User Address
-router.post("/address/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.post('/address/:id', veryfyTokenAndAuthorization, async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.params.id },
       {
         $push: {
-          "address.list": req.body,
+          'address.list': req.body,
         },
       },
       { new: true }
     );
-    res.status(200).json(user);
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 // Update User Address
-router.put("/address/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.put('/address/:id', veryfyTokenAndAuthorization, async (req, res) => {
   try {
     // const user = await User.findOneAndUpdate(
     //   { _id: req.params.id, "address.list._id": req.body._id },
@@ -42,38 +43,40 @@ router.put("/address/:id", veryfyTokenAndAuthorization, async (req, res) => {
       { _id: req.params.id },
       {
         $set: {
-          "address.list": req.body,
+          'address.list': req.body,
         },
       },
       { new: true }
     );
-    res.status(200).json(user);
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 // Delete User Address
-router.delete("/address/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.delete('/address/:id', veryfyTokenAndAuthorization, async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
-      { _id: req.params.id, "address.list._id": req.body.id },
+      { _id: req.params.id, 'address.list._id': req.body.id },
       {
         $pull: {
-          "address.list": { _id: req.body.id },
+          'address.list': { _id: req.body.id },
         },
       },
       { new: true }
     );
-    res.status(200).json(user);
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 // Update User Profile
-router.put("/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.put('/:id', veryfyTokenAndAuthorization, async (req, res) => {
   const userExist = await User.findOne({ email: req.body.email });
-  if (userExist) res.status(400).json("User Email Already Exists");
+  if (userExist) res.status(400).json('User Email Already Exists');
 
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
@@ -88,6 +91,7 @@ router.put("/:id", veryfyTokenAndAuthorization, async (req, res) => {
     user.email = req.body.email || user.email;
     user.password = req.body.password || user.password;
     const updatedUser = await user.save();
+    const { password, ...others } = updatedUser._doc;
 
     // const updatedUser = await User.findByIdAndUpdate(
     //   req.params.id,
@@ -96,24 +100,24 @@ router.put("/:id", veryfyTokenAndAuthorization, async (req, res) => {
     //   },
     //   { new: true }
     // );
-    res.status(200).json(updatedUser);
+    res.status(200).json(others);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 // Delete User
-router.delete("/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.delete('/:id', veryfyTokenAndAuthorization, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.status(200).json("User deleted");
+    res.status(200).json('User deleted');
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 // Get User
-router.get("/profile/:id", veryfyTokenAndAuthorization, async (req, res) => {
+router.get('/profile/:id', veryfyTokenAndAuthorization, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     const { password, ...otheres } = user._doc;
@@ -124,7 +128,7 @@ router.get("/profile/:id", veryfyTokenAndAuthorization, async (req, res) => {
 });
 
 // Get All User
-router.get("/find", veryfyTokenAndAdmin, async (req, res) => {
+router.get('/find', veryfyTokenAndAdmin, async (req, res) => {
   const query = req.query.new;
   try {
     const users = query
@@ -137,7 +141,7 @@ router.get("/find", veryfyTokenAndAdmin, async (req, res) => {
 });
 
 // GET USER STATS
-router.get("/stats", veryfyTokenAndAdmin, async (req, res) => {
+router.get('/stats', veryfyTokenAndAdmin, async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 
@@ -146,12 +150,12 @@ router.get("/stats", veryfyTokenAndAdmin, async (req, res) => {
       { $match: { createdAt: { $gte: lastYear } } },
       {
         $project: {
-          month: { $month: "$createdAt" },
+          month: { $month: '$createdAt' },
         },
       },
       {
         $group: {
-          _id: "$month",
+          _id: '$month',
           total: { $sum: 1 },
         },
       },
