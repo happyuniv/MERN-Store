@@ -1,10 +1,12 @@
-import styled from "styled-components";
-import { CartProduct, RemoveFromCart, setAmount } from "../redux/cartSlice";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { ReactComponent as RemoveIcon } from "../asset/remove.svg";
-import { Fragment, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ReactComponent as EmptyCartIcon } from "../asset/emptycart.svg";
+import styled from 'styled-components';
+import { CartProduct, RemoveFromCart, setAmount } from '../redux/cartSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { ReactComponent as RemoveIcon } from '../asset/remove.svg';
+import { Fragment, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ReactComponent as EmptyCartIcon } from '../asset/emptycart.svg';
+import { openSnackBar } from '../redux/snackBarSlice';
+import SnackBar from '../component/SnackBar';
 
 const EmptyContainer = styled.div`
   display: flex;
@@ -187,7 +189,7 @@ const Cart = () => {
     setSelectedProducts(
       selectedProducts.map((_product) => {
         if (_product._id === product._id) {
-          if (type === "plus")
+          if (type === 'plus')
             return { ...product, amount: product.amount + 1 };
           else return { ...product, amount: product.amount - 1 };
         } else return _product;
@@ -219,7 +221,8 @@ const Cart = () => {
   };
 
   const handleSubmit = () => {
-    navigate("../placeorder", { state: selectedProducts });
+    if (sum) navigate('../placeorder', { state: selectedProducts });
+    else dispatch(openSnackBar('check at lease one product'));
   };
 
   const isProductChecked = (product: CartProduct) => {
@@ -235,21 +238,15 @@ const Cart = () => {
     (acc, cur) => acc + cur.amount * cur.price,
     0
   );
-  const selectedSum = () => {
-    let sum = 0;
-    selectedProducts.forEach((product) => {
-      sum += product.amount * product.price;
-    });
-    return sum;
-  };
 
   return (
     <>
+      <SnackBar />
       {!cartProducts.length ? (
         <EmptyContainer>
-          <EmptyCartIcon width={280} height={280} fill={"gray"} />
+          <EmptyCartIcon width={280} height={280} fill={'gray'} />
           CART IS EMPTY
-          <Link to={"/"}>
+          <Link to={'/'}>
             <Button>BACK TO HOME</Button>
           </Link>
         </EmptyContainer>
@@ -260,14 +257,14 @@ const Cart = () => {
               <Fragment key={product._id}>
                 <ItemContainer>
                   <ItemCheckBox
-                    type={"checkbox"}
+                    type={'checkbox'}
                     checked={isProductChecked(product)}
                     onChange={(e) => handleCheck(e, product)}
                   />
                   <ProductWrapper>
                     <ProductDetail>
                       {/* <ProductImgWrapper> */}
-                      <ProductImg src={product.image} alt="" />
+                      <ProductImg src={product.image} alt='' />
                       {/* </ProductImgWrapper> */}
                       <ProductDescription>
                         <ProductTitle>{product.title}</ProductTitle>
@@ -275,12 +272,12 @@ const Cart = () => {
                     </ProductDetail>
                     <PriceDetail>
                       <AmountContainer>
-                        <Plus onClick={() => handleAmount("plus", product)}>
+                        <Plus onClick={() => handleAmount('plus', product)}>
                           +
                         </Plus>
                         <Amount>{product.amount}</Amount>
                         <Minus
-                          onClick={() => handleAmount("minus", product)}
+                          onClick={() => handleAmount('minus', product)}
                           disabled={product.amount === 1}
                         >
                           -
@@ -292,7 +289,7 @@ const Cart = () => {
                     </PriceDetail>
                     <RemoveContainer>
                       <RemoveBtn onClick={() => handleRemove(product)}>
-                        <RemoveIcon width={36} height={36} fill="#e85252f6" />
+                        <RemoveIcon width={36} height={36} fill='#e85252f6' />
                       </RemoveBtn>
                     </RemoveContainer>
                   </ProductWrapper>
@@ -305,7 +302,7 @@ const Cart = () => {
           <SummaryContainer>
             <SelectBox>
               <AllCheckBox
-                type="checkbox"
+                type='checkbox'
                 checked={isProductAllChecked}
                 onChange={handleSelectAll}
               />

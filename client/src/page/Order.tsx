@@ -1,15 +1,15 @@
-import { AxiosError } from "axios";
-import { Fragment, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { userRequest } from "../api";
-import Address from "../component/Address";
-import Loading from "../component/Loading";
-import SnackBar from "../component/SnackBar";
-import { CartProduct } from "../redux/cartSlice";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { openSnackBar } from "../redux/snackBarSlice";
-import { logout } from "../redux/userSlice";
+import { AxiosError } from 'axios';
+import { Fragment, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { userRequest } from '../api';
+import Address from '../component/Address';
+import Loading from '../component/Loading';
+import SnackBar from '../component/SnackBar';
+import { CartProduct } from '../redux/cartSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { openSnackBar } from '../redux/snackBarSlice';
+import { logout } from '../redux/userSlice';
 
 const Container = styled.div`
   display: flex;
@@ -86,8 +86,8 @@ const SummaryList = styled.div<{ content?: string }>`
   display: flex;
   justify-content: space-between;
   margin: 2rem 0;
-  font-size: ${(props) => (props.content === "total" ? "3.5rem" : "2.5rem")};
-  font-weight: ${(props) => (props.content === "total" ? "500" : "300")};
+  font-size: ${(props) => (props.content === 'total' ? '3.5rem' : '2.5rem')};
+  font-weight: ${(props) => (props.content === 'total' ? '500' : '300')};
 `;
 const SummaryContent = styled.span``;
 const SummaryPrice = styled.span``;
@@ -100,6 +100,23 @@ const CheckOut = styled.button`
 
   &:hover {
     cursor: pointer;
+  }
+`;
+
+const CardContainer = styled.div`
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 0.5rem solid;
+  border-radius: 1rem;
+  border-color: rgba(230, 218, 218, 0.3);
+  font-size: 1.4rem;
+  text-align: center;
+`;
+const CardList = styled.div`
+  font-size: 1.2rem;
+
+  &:first-child {
+    margin-top: 1rem;
   }
 `;
 
@@ -121,11 +138,11 @@ const Order = () => {
 
   const handleCheckout = async () => {
     if (!user) {
-      navigate("../login", { replace: true });
+      navigate('../login', { replace: true });
       return;
     }
     if (!selectedAddress) {
-      dispatch(openSnackBar("Select Address"));
+      dispatch(openSnackBar('Select Address'));
       return;
     }
     try {
@@ -139,7 +156,7 @@ const Order = () => {
       window.location.href = res.data.session_url;
     } catch (e) {
       if (e instanceof AxiosError) dispatch(openSnackBar(e.response?.data));
-      else dispatch(openSnackBar("Server Error"));
+      else dispatch(openSnackBar('Server Error'));
       setLoading(false);
     }
   };
@@ -154,12 +171,12 @@ const Order = () => {
           <SectionTitle>USER INFORMATION</SectionTitle>
           <UserInfoContainer>
             {user?.username}
-            {"\n"}
+            {'\n'}
             {user?.email}
           </UserInfoContainer>
           <Hr />
           <SectionTitle>SHIPPING ADDRESS</SectionTitle>
-          <Address page="order" />
+          <Address page='order' />
           <Hr />
           <SectionTitle>ORDER ITEMS</SectionTitle>
           {cartItems.map((item) => (
@@ -195,12 +212,18 @@ const Order = () => {
             </SummaryList>
             <hr />
 
-            <SummaryList content="total">
+            <SummaryList content='total'>
               <SummaryContent>Total</SummaryContent>
               <SummaryPrice>${+sum.toFixed(2)}</SummaryPrice>
             </SummaryList>
             <CheckOut onClick={() => handleCheckout()}>Check Out</CheckOut>
           </Summary>
+          <CardContainer>
+            TEST CARD NUMBER
+            <CardList>Successful payment : 4242 4242 4242 4242</CardList>
+            <CardList>Failed payment : 4000 0000 0000 9995</CardList>
+            <CardList>Requires authentication : 4000 0025 0000 3155</CardList>
+          </CardContainer>
         </SummaryContainer>
       </Container>
     </>

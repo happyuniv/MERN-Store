@@ -1,14 +1,14 @@
-import { AxiosError } from "axios";
-import { useState } from "react";
-import styled from "styled-components";
-import { userRequest } from "../api";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { openSnackBar } from "../redux/snackBarSlice";
-import { userUpdate, UserAddress } from "../redux/userSlice";
-import AddressDetailEdit from "./AddressDetailEdit";
-import Backdrop from "./Backdrop";
-import Loading from "./Loading";
-import SnackBar from "./SnackBar";
+import { AxiosError } from 'axios';
+import { useState } from 'react';
+import styled from 'styled-components';
+import { userRequest } from '../api';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { openSnackBar } from '../redux/snackBarSlice';
+import { userUpdate, UserAddress } from '../redux/userSlice';
+import AddressDetailEdit from './AddressDetailEdit';
+import Backdrop from './Backdrop';
+import Loading from './Loading';
+import SnackBar from './SnackBar';
 
 type props = {
   toggleEdit: () => void;
@@ -49,7 +49,7 @@ const AddressWrapper = styled.div<{ selected?: boolean }>`
   /* border: 0.1rem solid; */
   /* background-color: #b36c6c21; */
   background-color: ${(props) =>
-    props.selected ? "var(--theme-dark)" : "var(--theme)"};
+    props.selected ? 'var(--theme-dark)' : 'var(--theme)'};
 
   &:nth-child(4) {
     margin-bottom: 5rem;
@@ -150,11 +150,16 @@ const AddressEdit = ({ toggleEdit }: props) => {
         updatedList
       );
       dispatch(userUpdate(res.data));
-      dispatch(openSnackBar("ADDRESS SELECTED!"));
+      dispatch(openSnackBar('ADDRESS SELECTED!'));
       setLoading(false);
     } catch (e) {
-      if (e instanceof AxiosError) dispatch(openSnackBar(e.response?.data));
-      else dispatch(openSnackBar("Server Error"));
+      if (e instanceof AxiosError)
+        dispatch(
+          openSnackBar(
+            e.response && e.response.data ? e.response.data : e.message
+          )
+        );
+      else dispatch(openSnackBar('Server Error'));
       setLoading(false);
     }
   };

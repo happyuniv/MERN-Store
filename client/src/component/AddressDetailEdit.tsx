@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { ReactComponent as RemoveIcon } from "../asset/remove.svg";
-import { userRequest } from "../api";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { userUpdate, UserAddress } from "../redux/userSlice";
-import { openSnackBar } from "../redux/snackBarSlice";
-import Loading from "./Loading";
-import { AxiosError } from "axios";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { ReactComponent as RemoveIcon } from '../asset/remove.svg';
+import { userRequest } from '../api';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { userUpdate, UserAddress } from '../redux/userSlice';
+import { openSnackBar } from '../redux/snackBarSlice';
+import Loading from './Loading';
+import { AxiosError } from 'axios';
 
 type props = {
   onClose: () => void;
@@ -78,9 +78,9 @@ const Back = styled.button`
 
 const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
   const [currentAddress, setCurrentAddress] = useState({
-    country: "",
-    city: "",
-    detail: "",
+    country: '',
+    city: '',
+    detail: '',
   } as UserAddress);
   const [loading, setLoading] = useState(false);
 
@@ -100,7 +100,7 @@ const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
         currentAddress.detail.trim()
       )
     ) {
-      dispatch(openSnackBar("Fill in the blnak"));
+      dispatch(openSnackBar('Fill in the blnak'));
       return;
     }
 
@@ -128,10 +128,15 @@ const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
       }
 
       setLoading(false);
-      dispatch(openSnackBar("ADDRESS SUCCESSFULLY UPDATED"));
+      dispatch(openSnackBar('ADDRESS SUCCESSFULLY UPDATED'));
     } catch (e) {
-      if (e instanceof AxiosError) dispatch(openSnackBar(e.response?.data));
-      else dispatch(openSnackBar("Server Error"));
+      if (e instanceof AxiosError)
+        dispatch(
+          openSnackBar(
+            e.response && e.response.data ? e.response.data : e.message
+          )
+        );
+      else dispatch(openSnackBar('Server Error'));
       setLoading(false);
     }
     onClose();
@@ -151,10 +156,10 @@ const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
 
         dispatch(userUpdate(res.data));
         setLoading(false);
-        dispatch(openSnackBar("ADDRESS SUCCESSFULLY REMOVED"));
+        dispatch(openSnackBar('ADDRESS SUCCESSFULLY REMOVED'));
       } catch (e) {
         if (e instanceof AxiosError) dispatch(openSnackBar(e.response?.data));
-        else dispatch(openSnackBar("Server Error"));
+        else dispatch(openSnackBar('Server Error'));
         setLoading(false);
       }
     }
@@ -168,7 +173,7 @@ const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
       <Form onSubmit={handleSubmit}>
         <Holder>Country</Holder>
         <Input
-          placeholder="country"
+          placeholder='country'
           value={currentAddress.country}
           required
           onChange={(e) =>
@@ -177,7 +182,7 @@ const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
         />
         <Holder>City</Holder>
         <Input
-          placeholder="city"
+          placeholder='city'
           value={currentAddress.city}
           required
           onChange={(e) =>
@@ -186,21 +191,21 @@ const AddressDetailEdit = ({ targetAddress, onClose }: props) => {
         />
         <Holder>Detail</Holder>
         <Input
-          placeholder="detail"
+          placeholder='detail'
           value={currentAddress.detail}
           required
           onChange={(e) =>
             setCurrentAddress({ ...currentAddress, detail: e.target.value })
           }
         />
-        <Submit type="submit">SAVE</Submit>
+        <Submit type='submit'>SAVE</Submit>
         {targetAddress && !currentAddress.selected && (
           <RemoveContainer>
             <RemoveBtn
-              type="button"
+              type='button'
               onClick={() => handleRemove(currentAddress)}
             >
-              <RemoveIcon width={36} height={36} fill="#e85252f6" />
+              <RemoveIcon width={36} height={36} fill='#e85252f6' />
             </RemoveBtn>
           </RemoveContainer>
         )}

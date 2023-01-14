@@ -173,7 +173,10 @@ const ProfileEdit = ({ toggleEdit }: props) => {
       setLoading(false);
     } catch (e) {
       if (e instanceof AxiosError)
-        setInformMessage({ message: e.message, success: false });
+        setInformMessage({
+          message: e.response && e.response.data ? e.response.data : e.message,
+          success: false,
+        });
       else setInformMessage({ message: 'Server Error', success: false });
       setLoading(false);
     }

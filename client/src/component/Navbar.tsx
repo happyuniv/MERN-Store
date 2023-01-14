@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import { ReactComponent as LogoIcon } from "../asset/logo.svg";
-import { ReactComponent as CartIcon } from "../asset/cart.svg";
-import { ReactComponent as LoginIcon } from "../asset/login.svg";
-import { ReactComponent as SearchIcon } from "../asset/search.svg";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { logout } from "../redux/userSlice";
+import styled from 'styled-components';
+import { ReactComponent as LogoIcon } from '../asset/logo.svg';
+import { ReactComponent as CartIcon } from '../asset/cart.svg';
+import { ReactComponent as LoginIcon } from '../asset/login.svg';
+import { ReactComponent as SearchIcon } from '../asset/search.svg';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { logout } from '../redux/userSlice';
 
 const Container = styled.header``;
 
@@ -83,7 +83,7 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 const DropDownMenu = styled.div<{ isVisible: boolean }>`
-  display: ${(props) => (props.isVisible ? "flex" : "none")};
+  display: ${(props) => (props.isVisible ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: center;
   position: absolute;
@@ -92,6 +92,7 @@ const DropDownMenu = styled.div<{ isVisible: boolean }>`
   /* padding: 0rem 3rem; */
   background-color: #f5eaea51;
   white-space: nowrap;
+  z-index: 1000;
 `;
 
 const DropDownProfile = styled.div`
@@ -115,7 +116,7 @@ const Hr = styled.hr`
 
 const Navbar = () => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const user = useAppSelector((state) => state.user.currentUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -129,11 +130,11 @@ const Navbar = () => {
     };
 
     if (menuVisible) {
-      window.addEventListener("click", onClick);
+      window.addEventListener('click', onClick);
     }
 
     return () => {
-      window.removeEventListener("click", onClick);
+      window.removeEventListener('click', onClick);
     };
   }, [menuVisible]);
 
@@ -142,7 +143,7 @@ const Navbar = () => {
     if (keyword) {
       keyword.trim();
       navigate(`/search/${keyword}`);
-      setKeyword("");
+      setKeyword('');
     }
   };
 
@@ -151,13 +152,13 @@ const Navbar = () => {
       <Container>
         <NavContainer>
           <LogoIconWrapper>
-            <Link to={"/"} reloadDocument>
+            <Link to={'/'} reloadDocument>
               <LogoIcon width={64} height={64} />
             </Link>
           </LogoIconWrapper>
           <SearchContainer onSubmit={handleSubmit}>
             <SearchBar
-              placeholder="Search"
+              placeholder='Search'
               value={keyword}
               onChange={(e) => {
                 setKeyword(e.target.value);
@@ -168,7 +169,7 @@ const Navbar = () => {
             </SearchIconWrapper>
           </SearchContainer>
           <CartIconWrapper>
-            <Link to={"/cart"}>
+            <Link to={'/cart'}>
               <CartIcon width={30} height={30} />
             </Link>
           </CartIconWrapper>
@@ -185,10 +186,10 @@ const Navbar = () => {
                 <>
                   <DropDownProfile>Hello {user.username} ! </DropDownProfile>
                   <Hr />
-                  <StyledLink to={"/mypage"}>
+                  <StyledLink to={'/mypage'}>
                     <DropDownItem>My Page</DropDownItem>
                   </StyledLink>
-                  <StyledLink to={"/login"}>
+                  <StyledLink to={'/login'}>
                     <DropDownItem onClick={() => dispatch(logout())}>
                       Sign Out
                     </DropDownItem>
@@ -196,10 +197,10 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <StyledLink to={"/login"}>
+                  <StyledLink to={'/login'}>
                     <DropDownItem>Sign In</DropDownItem>
                   </StyledLink>
-                  <StyledLink to={"/register"}>
+                  <StyledLink to={'/register'}>
                     <DropDownItem>Register</DropDownItem>
                   </StyledLink>
                 </>
