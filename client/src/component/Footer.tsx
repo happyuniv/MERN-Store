@@ -133,7 +133,7 @@ const Footer = () => {
           </Group>
         </GroupContainer>
         <hr />
-        <CopyRight> &copy; 2022 All rights reserved.</CopyRight>
+        <CopyRight> &copy; 2023 All rights reserved.</CopyRight>
       </Container>
     </>
   );

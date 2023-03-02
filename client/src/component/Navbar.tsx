@@ -153,7 +153,7 @@ const Navbar = () => {
         <NavContainer>
           <LogoIconWrapper>
             <Link to={'/'} reloadDocument>
-              <LogoIcon width={64} height={64} />
+              <LogoIcon width={48} height={48} />
             </Link>
           </LogoIconWrapper>
           <SearchContainer onSubmit={handleSubmit}>
