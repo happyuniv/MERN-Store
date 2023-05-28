@@ -19,6 +19,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (_,res) => {
+  res.end();
+})
+setInterval(() => {
+  fetch(process.env.SERVER_DOMAIN)
+},840000)
+
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/product", productRoute);
