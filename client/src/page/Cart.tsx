@@ -182,7 +182,7 @@ const Cart = () => {
 
   useEffect(() => {
     setSelectedProducts(cartProducts);
-  }, [cartProducts]);
+  }, []);
 
   const handleAmount = (type: string, product: CartProduct) => {
     dispatch(setAmount({ type, product }));
