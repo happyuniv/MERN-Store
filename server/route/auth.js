@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   const userExist = await User.findOne({ email: req.body.email });
-  if (userExist) res.status(400).json("User Email Already Exists");
+  if (userExist) return res.status(400).json("User Email Already Exists");
 
   const newUser = new User({
     username: req.body.username,
@@ -39,16 +39,15 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    !user && res.status(401).json("Wrong Credentials");
+    if (!user) return res.status(401).json("Wrong Credentials");
 
     const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SEC
     );
     const storedPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
-
-    storedPassword !== req.body.password &&
-      res.status(401).json("Wrong Credentials");
+    if (storedPassword !== req.body.password)
+      return res.status(401).json("Wrong Credentials");
 
     const accessToken = jwt.sign(
       {
